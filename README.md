@@ -2,7 +2,97 @@
 # TASK 1 :
 <img width="1281" height="762" alt="Screenshot 2026-11-01 105758" src="https://github.com/user-attachments/assets/5078bb69-296c-4beb-a84b-ed8fe53abcc5" />
 
+# Task 2 :
+# code
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.util.Scanner;
 
+public class Main {
+
+    public static boolean isPrime(int number) {
+
+        if (number < 2) {
+            return false;
+        }
+
+        for (int i = 2; i <= number / i; i++) {
+            if (number % i == 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static int findNthPrime(int n) {
+
+        int count = 0;
+        int number = 1;
+
+        while (count < n) {
+            number++;
+
+            if (isPrime(number)) {
+                count++;
+            }
+        }
+
+        return number;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter N: ");
+        int n = sc.nextInt();
+
+        if (n <= 0) {
+            System.out.println("Please enter a positive number.");
+            sc.close();
+            return;
+        }
+
+        int prime = findNthPrime(n);
+
+        System.out.println("The " + n +
+                "th Prime Number is: " + prime);
+
+        String url = "jdbc:mysql://localhost:3306/prime_db";
+        String username = "root";
+        String password = "mahin555";
+
+        String sql = "INSERT INTO prime_numbers " +
+                "(n_value, prime_number) VALUES (?, ?)";
+
+        try {
+            Connection con = DriverManager.getConnection(
+                    url, username, password);
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, n);
+            ps.setInt(2, prime);
+
+            ps.executeUpdate();
+
+            System.out.println("Data inserted successfully!");
+
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            System.out.println("Database Error: " + e.getMessage());
+        }
+
+        sc.close();
+    }
+}
+
+# output
+<img width="1863" height="906" alt="nthprimechecker" src="https://github.com/user-attachments/assets/7dbfe651-40aa-42bf-8b05-8bab893da7de" />
 
 
 
